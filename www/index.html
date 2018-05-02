@@ -1,0 +1,1368 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Estação Saúde</title>
+
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+
+    <!--<link type="text/css" rel="stylesheet" href="css/index.css"/>-->
+    <link rel="stylesheet" type="text/css" href="plugins/jquery-mobile/jquery.mobile-1.4.5.css">
+    <link rel="stylesheet" type="text/css" href="materialize/css/materialize.css">
+    <link rel="stylesheet" type="text/css" href="js/owl.carousel.css">
+    <link rel="stylesheet" type="text/css" href="fonts/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/colors.css">
+    <link rel="stylesheet" type="text/css" href="css/animate.css">
+    <link rel="stylesheet" type="text/css" href="css/material-refresh.css">
+    <style>
+        #map-page, #map-canvas, #est-det {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="modal-lomadee" class="modal modal-fixed-footer">
+        <div class="modal-content" style="text-align: center;">
+            <img src="#" class="lomadee-seller-img-modal">
+            <h4 class="modal-title"></h4>
+            <p class="modal-subtitle"></p>
+            <br />
+
+            <div class="load-div-modal" style="display: none;">
+                <center>
+                    <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                        <circle class="circle" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+                    </svg>
+                </center>
+            </div>
+
+            <div class="alerts-content">
+                <div class="row alert-success">
+                    <div class="col s12">
+                        <div class="card-panel green">
+                            <span class="white-text">
+                                <strong style="font-size: 15pt">Sem problemas!</strong> Não há diferença de porcentagem entre as categorias desta loja.<br />
+                                Clique no botão abaixo ou acima para ser redirecionado.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row alert-warning">
+                    <div class="col s12">
+                        <div class="card-panel amber darken-3">
+                            <span class="white-text">
+                                <strong style="font-size: 15pt">Atenção!</strong> Há diferenças de porcentagem entre as categorias desta loja. Veja abaixo.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lomadee-percent-table">
+                <div class="collection">
+
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <a href="#!" data-rel="back" class="btn waves-effect secondary-content" style="float: left;">Voltar</a>
+            <a href="#!" class="btn waves-effect waves-green redirect-link">Acessar a Loja!</a>
+        </div>
+    </div>
+
+    <div id="modal-confirm" class="modal modal-fixed-footer" style="height: 40%;">
+        <div class="modal-content" style="text-align: center;">
+            <h4>Você tem certeza?</h4>
+            <p></p>
+        </div>
+
+
+        <div class="modal-footer">
+            <a href="#!" data-rel="back" class="btn waves-effect secondary-content modal-close" style="float: left;">Voltar</a>
+            <a href="#!" class="btn waves-effect waves-green yes-btn green">Sim!</a>
+        </div>
+    </div>
+
+    <div data-role="page" id="login">
+        <div data-role="main" class="ui-content content-login">
+
+            <!-- Card que informa estar sem conexão -->
+            <div class="row no-connection toast-style" style="position: absolute;top: 0;left: 0;right: 0;margin-top: 0;display: none;">
+                <p>Sem Conexão com a internet</p>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <div class="row">
+                        <div class="input-field col s12 center">
+                            <img src="img/logo-header.png" alt="" class="responsive-img valign image-login">
+                        </div>
+                    </div>
+
+                    <div class="row" id="login-load" style="display: none;">
+                        <center>
+                            <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                                <circle class="circle" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+                            </svg>
+                        </center>
+                    </div>
+
+                    <form class="login-form">
+                        <div class="row login-itens">
+                            <div class="row margin" style="display:none;">
+                                <label class="text-center" style="width: 70%;margin:0 auto;">
+                                    <div style="float: left;">
+                                        <input name="info-type" type="radio" id="mail-login" value="1" checked="">
+                                        <label for="mail-login">E-mail</label>
+                                    </div>
+
+                                    <div style="float: right;">
+                                        <input name="info-type" type="radio" id="cpf-login" value="3">
+                                        <label for="cpf-login">CPF</label>
+                                    </div>
+
+                                </label>
+                            </div>
+
+
+                            <div class="row margin">
+                                <div class="input-field col m12 width-100" id="user-login-group">
+                                    <i class="material-icons icon-color prefix">perm_identity</i>
+
+                                    <input id="login-username" type="text">
+                                    <label for="login-username">Usuário</label>
+                                </div>
+                            </div>
+
+                            <div class="row margin">
+                                <div class="input-field col m12 width-100" id="pass-login-group">
+                                    <i class="material-icons icon-color prefix">lock_outline</i>
+                                    <input id="login-pass" type="password">
+                                    <label for="login-pass">Senha</label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <button type="submit" id="login-btn" class="btn waves-effect waves-light col s12 btn-login-color" style="cursor: pointer;">Login</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div data-role="page" id="pageone">
+        <div class="row header-top">
+            <div class="navbar-fixed">
+                <nav>
+                    <div class="nav-wrapper primary-color">
+                        <a href="#!" class="brand-logo center-align" style="font-weight: 400;left: 50% !important;-webkit-transform: translateX(-50%) !important;">
+                            <img src="img/logo-header.png" class="circle-image top-logo valign">
+                        </a>
+                        <a href="#" id="logout" data-transition="slideup" class="right button-collapse font-exit" style="font-weight: 400;font-size:18px;"><i class="material-icons">exit_to_app</i></a>
+                    </div>
+                </nav>
+            </div>
+
+            <div id="index-banner" class="parallax-container">
+                <div class="section no-pad-top">
+                    <div class="container">
+                        <br><br>
+
+                        <div class="row">
+                            <div class="col m12 princ-card-col">
+                                <div class="card card-transparent">
+                                    <div class="card-content">
+                                        <div class="row">
+                                            <div class="col m12 princ-card-col">
+                                                <span class="card-title second-color-text" id="princ-card-title">0 <small class="second-color-text">Pontos</small></span>
+
+                                                <p id="princ-card-p" class="grey-text text-darken-2"><!-- Aqui vem o "Bem vindo fulano" --></p>
+                                                <hr style="border:none;border-top: 1px solid rgba(160, 160, 160, 0.2);">
+                                                <!-- <div class="col s6" style="border-right: 1px solid rgba(160, 160, 160, 0.2);">
+                                                    <strong>CashBack OK</strong>
+                                                    <p class="cashback-ok"></p>
+                                                </div>
+                                                <div class="col s6">
+                                                    <strong>CashBack Pendente</strong>
+                                                    <p class="cashback-pend"></p>
+                                                </div> -->
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <div data-role="main" class="ui-content">
+
+            <div class="row" style="margin-bottom: -10px;">
+                <!-- <div class="col s12 col m6">
+                    <a href="#get-online" data-transition="slide">
+                      <div class="card">
+                        <div class="card-content">
+
+                            <div class="row" style="margin-bottom: -10px;">
+                                <div class="col s4 no-padding" style="text-align: center;">
+                                    <img src="img/online-shop.png" style="max-width: 65px;">
+                                </div>
+
+                                <div class="col s8">
+                                  <span class="card-title grey-text text-darken-2 menu-title" style="line-height: 30px;">Ganhe Pomos<br/> Online</span>
+                                </div>
+                            </div>
+
+                           </div>
+
+                        <div class="card-action">
+                          <a href="#get-online" data-transition="slide" class="third-color-text">Ganhe Pomos nas lojas online</a>
+                        </div>
+                      </div>
+                    </a>
+
+                  </div> -->
+
+                <div class="col s12 col m6">
+                    <a href="#categories" data-transition="slide">
+                        <div class="card">
+                            <div class="card-content">
+
+                                <div class="row" style="margin-bottom: -10px;">
+                                    <div class="col s4 no-padding" style="text-align: center;">
+                                        <img src="img/shop.png" style="max-width: 65px;">
+                                    </div>
+
+                                    <div class="col s8">
+                                        <span class="card-title grey-text text-darken-2 menu-title" style="line-height: 30px;">Loja<br /> de Prêmios</span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="card-action">
+                                <a href="#categories" data-transition="slide" class="third-color-text">Veja todos os prêmios disponíveis</a>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+
+                <div class="col s12 col m6">
+                    <a href="#extratos" data-transition="slide">
+                        <div class="card">
+                            <div class="card-content">
+
+                                <div class="row" style="margin-bottom: -10px;">
+                                    <div class="col s4 no-padding" style="text-align: center;">
+                                        <img src="img/clipboard.png" style="max-width: 65px;">
+                                    </div>
+
+                                    <div class="col s8">
+                                        <span class="card-title grey-text text-darken-2 menu-title">Extratos</span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="card-action">
+                                <a href="#extratos" data-transition="slide" class="third-color-text">Veja seus extratos</a>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+
+                <div class="col s12 col m6">
+                    <a href="#ticket" data-transition="slide">
+                        <div class="card">
+                            <div class="card-content">
+
+                                <div class="row" style="margin-bottom: -10px;">
+                                    <div class="col s4 no-padding" style="text-align: center;">
+                                        <img src="img/tickets.png" style="max-width: 65px;">
+                                    </div>
+
+                                    <div class="col s8">
+                                        <span class="card-title grey-text text-darken-2 menu-title">Prêmios</span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="card-action">
+                                <a href="#ticket" data-transition="slide" class="third-color-text">Veja seus prêmios</a>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col s12 col m6">
+                    <a href="#estabelecimentos" data-transition="slide">
+                        <div class="card">
+                            <div class="card-content">
+
+                                <div class="row" style="margin-bottom: -10px;">
+                                    <div class="col s4 no-padding" style="text-align: center;">
+                                        <img src="img/store.png" style="max-width: 65px;">
+                                    </div>
+
+                                    <div class="col s8">
+                                        <span class="card-title grey-text text-darken-2 menu-title">Credenciados</span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="card-action">
+                                <a href="#estabelecimentos" data-transition="slide" class="third-color-text">Veja todos</a>
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+
+                <!-- <div class="col s12 col m6">
+                  <a href="#top-sale" data-transition="slide">
+                      <div class="card">
+                          <div class="card-content">
+
+                              <div class="row" style="margin-bottom: -10px;">
+                                  <div class="col s4 no-padding" style="text-align: center;">
+                                      <img src="img/percent-tag.png" style="max-width: 65px;">
+                                  </div>
+
+                                  <div class="col s8">
+                                      <span class="card-title grey-text text-darken-2 menu-title">Top Ofertas</span>
+                                  </div>
+                              </div>
+
+                          </div>
+
+                          <div class="card-action">
+                              <a href="#top-sale" data-transition="slide" class="third-color-text">Acompanhe as melhores ofertas</a>
+                          </div>
+                      </div>
+                  </a>
+
+                </div> -->
+
+                <div class="col s12 col m6">
+                    <a href="#conta" data-transition="slide">
+                        <div class="card">
+                            <div class="card-content">
+
+                                <div class="row" style="margin-bottom: -10px;">
+                                    <div class="col s4 no-padding" style="text-align: center;">
+                                        <img src="img/card.png" style="max-width: 65px;">
+                                    </div>
+
+                                    <div class="col s8">
+                                        <span class="card-title grey-text text-darken-2 menu-title">Minha Conta</span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="card-action">
+                                <a href="#conta" data-transition="slide" class="third-color-text">Veja seus dados</a>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div data-role="page" id="estabelecimentos">
+        <div class="row header-top" style="margin-bottom: -10px;">
+            <div class="navbar-fixed">
+                <nav>
+                    <div class="nav-wrapper primary-color">
+                        <a href="#!" class="brand-logo font-exit" style="font-weight: 400;margin-top:-2px;">Credenciados</a>
+                        <a href="#!" class="button-collapse" data-rel="back" data-transition="slide" style="font-weight: 400;color: white;font-size:17pt;">
+                            <img class="arrow-back" src="img/arrow_1.svg" width="20" height="20">
+                        </a>
+                    </div>
+                </nav>
+            </div>
+
+        </div>
+
+        <div data-role="main" class="ui-content" style="padding: 0;margin-top: 15px;">
+            <!-- Loader -->
+            <div id="muiRefresh" class="mui-refresh-main mui-refresh-nav mui-blue-theme mui-refresh-main-animat loading-div" style="z-index: 9999; top: 80px; opacity: 1; transform: scale(1);display: none;">
+                <div class="mui-refresh-wrapper">
+                    <div class="mui-arrow-wrapper" style="display: none;">
+                        <div class="mui-arrow-main" style="transform: rotate(-666deg);"></div>
+                    </div>
+                    <div class="mui-spinner-wrapper">
+                        <div class="mui-spinner-main">
+                            <div class="mui-spinner-left">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                            <div class="mui-spinner-right">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="collection collection-mobile" id="est-ul" style="display: none;"></ul>
+
+        </div>
+
+    </div>
+
+    <div data-role="page" id="est-det">
+        <div class="row header-top" style="margin-bottom: -10px;">
+            <div class="navbar-fixed">
+                <nav>
+                    <div class="nav-wrapper primary-color">
+                        <a href="#!" class="brand-logo font-exit" style="font-weight: 400;"></a>
+                        <a href="#!" class="button-collapse" data-rel="back" data-transition="slide" style="font-weight: 400;color: white;font-size:17pt;">
+                            <img class="arrow-back" src="img/arrow_1.svg" width="20" height="20">
+                        </a>
+                    </div>
+                </nav>
+            </div>
+
+        </div>
+
+        <div data-role="main" class="ui-content est-det-main">
+
+            <!-- Loader -->
+            <div id="muiRefresh" class="mui-refresh-main mui-refresh-nav mui-blue-theme mui-refresh-main-animat loading-div" style="z-index: 9999; top: 80px; opacity: 1; transform: scale(1);display: none;">
+                <div class="mui-refresh-wrapper">
+                    <div class="mui-arrow-wrapper" style="display: none;">
+                        <div class="mui-arrow-main" style="transform: rotate(-666deg);"></div>
+                    </div>
+                    <div class="mui-spinner-wrapper">
+                        <div class="mui-spinner-main">
+                            <div class="mui-spinner-left">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                            <div class="mui-spinner-right">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" class="branch-id-input">
+
+            <!-- Aqui vai os cards -->
+            <div id="est-content" data-url="map-page" class="animated bounceInUp" style="visibility: visible;">
+                <div class="row" style="margin-bottom:-10px;">
+                    <div class="col s12" style="width: 100%;height: 100%">
+                        <div class="card princ-card" style="width: 100%;height: 100%">
+                            <div class="card-image card-img-logo waves-effect waves-block waves-light">
+                                <div class="here-is-discount">
+
+                                </div>
+                                <img class="activator" src="">
+                            </div>
+                            <hr style="border:none;border-top: 1px solid rgba(160, 160, 160, 0.2);margin: 0;">
+                            <div class="card-content">
+                                <span class="card-title grey-text text-darken-4"></span>
+                                <p><a href="#" rel="external" data-ajax="false" id="est-site"></a></p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row" style="margin-bottom: -10px;width: 100%;height: 100%">
+                    <div class="col s12" style="width: 100%;height: 100%">
+                        <div class="map-card" style="width: 100%;height: 100%">
+                            <div class="card" style="width: 100%;height: 100%">
+                                <div class="card-image waves-effect waves-block waves-light" style="width: 100%;height: 250px">
+
+
+
+                                </div>
+
+                                <div class="card-content">
+                                    <a class="btn-floating btn-move-up waves-effect waves-light darken-2 right">
+                                        <i class="material-icons">place</i>
+                                    </a>
+                                    <span id="ad-card"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col s12">
+                        <div class="card-panel" id="tel-div">
+                            <span id="tel-card">
+
+                            </span>
+
+                            <br />
+
+                            <span id="cel-card">
+
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <div data-role="page" id="extratos">
+        <div class="row header-top">
+            <div class="navbar-fixed">
+                <nav>
+                    <div class="nav-wrapper primary-color">
+                        <a href="#!" class="brand-logo font-exit" style="font-weight: 400;font-size: 17pt;margin-top:-2px;">Extratos</a>
+                        <a href="#!" class="button-collapse" data-rel="back" data-transition="slide" style="font-weight: 400;color: white;font-size:17pt;">
+                            <img class="arrow-back" src="img/arrow_1.svg" width="20" height="20">
+                        </a>
+
+                        <ul class="tabs primary-color" id="tab-link" style="box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 2px 4px -1px rgba(0, 0, 0, 0.3);">
+                            <li class="tab"><a class="font-exit" id="pts-tab" href="#pts" data-rel="false">Extrato de Pontos</a></li>
+                            <!--<li class="tab"><a class="font-exit" id="cashback-tab" href="#cashback" data-rel="false">Extrato de Desconto</a></li>-->
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+
+        </div>
+
+        <div data-role="main" class="ui-content" style="margin-top:55px;padding: 0">
+            <!-- Loader -->
+            <div id="muiRefresh" class="mui-refresh-main mui-refresh-nav mui-blue-theme mui-refresh-main-animat loading-div" style="z-index: 9999; top: 80px; opacity: 1; transform: scale(1);display: none;">
+                <div class="mui-refresh-wrapper">
+                    <div class="mui-arrow-wrapper" style="display: none;">
+                        <div class="mui-arrow-main" style="transform: rotate(-666deg);"></div>
+                    </div>
+                    <div class="mui-spinner-wrapper">
+                        <div class="mui-spinner-main">
+                            <div class="mui-spinner-left">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                            <div class="mui-spinner-right">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="pts">
+                <div class="collection extract-table collection-mobile">
+
+                </div>
+            </div>
+
+            <div id="cashback">
+                <ul class="collection cashback-table collection-mobile"></ul>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div data-role="page" id="ticket">
+        <div class="row header-top">
+            <div class="navbar-fixed">
+                <nav>
+                    <div class="nav-wrapper primary-color">
+                        <a href="#!" class="brand-logo font-exit" style="font-weight: 400;font-size: 17pt;margin-top:-2px;">Prêmios</a>
+                        <a href="#!" class="button-collapse" data-rel="back" data-transition="slide" style="font-weight: 400;color: white;font-size:17pt;">
+                            <img class="arrow-back" src="img/arrow_1.svg" width="20" height="20">
+                        </a>
+
+                        <ul class="tabs primary-color" id="tab-link" style="box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 2px 4px -1px rgba(0, 0, 0, 0.3);">
+                            <li class="tab"><a class="font-exit" id="ava-tab-a" href="#ava-tab" data-rel="false">Prêmios Disponíveis</a></li>
+                            <li class="tab"><a class="font-exit" id="use-tab-a" href="#use-tab" data-rel="false">Prêmios Usados</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+
+        </div>
+
+        <div data-role="main" class="ui-content" style="margin-top:55px;padding: 0">
+            <!-- Loader -->
+            <div id="muiRefresh" class="mui-refresh-main mui-refresh-nav mui-blue-theme mui-refresh-main-animat loading-div" style="z-index: 9999; top: 80px; opacity: 1; transform: scale(1);display: none;">
+                <div class="mui-refresh-wrapper">
+                    <div class="mui-arrow-wrapper" style="display: none;">
+                        <div class="mui-arrow-main" style="transform: rotate(-666deg);"></div>
+                    </div>
+                    <div class="mui-spinner-wrapper">
+                        <div class="mui-spinner-main">
+                            <div class="mui-spinner-left">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                            <div class="mui-spinner-right">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="ava-tab">
+                <ul class="collection premium-ok-table collection-mobile"></ul>
+            </div>
+
+            <div id="use-tab">
+                <ul class="collection premium-used-table collection-mobile"></ul>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div data-role="page" id="conta">
+
+        <div class="row header-top" style="margin-bottom: -10px;">
+            <div class="navbar-fixed">
+                <nav>
+                    <div class="nav-wrapper primary-color">
+                        <a href="#!" class="brand-logo font-exit" style="font-weight: 400;font-size: 17pt;margin-top:-2px;">Minha Conta</a>
+                        <a href="#!" class="button-collapse" data-rel="back" data-transition="slideup" style="font-weight: 400;color: white;font-size:17pt;">
+                            <!-- <img class="arrow-back" src="img/arrow_1.svg" width="20" height="20"> -->
+                            <img class="arrow-back" src="img/arrow_1.svg" width="20" height="20">
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+
+        <div data-role="main" class="ui-content" style="padding: 0;">
+
+            <!-- Loader -->
+            <div id="muiRefresh" class="mui-refresh-main mui-refresh-nav mui-blue-theme mui-refresh-main-animat loading-div" style="z-index: 9999; top: 80px; opacity: 1; transform: scale(1);display: none;">
+                <div class="mui-refresh-wrapper">
+                    <div class="mui-arrow-wrapper" style="display: none;">
+                        <div class="mui-arrow-main" style="transform: rotate(-666deg);"></div>
+                    </div>
+                    <div class="mui-spinner-wrapper">
+                        <div class="mui-spinner-main">
+                            <div class="mui-spinner-left">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                            <div class="mui-spinner-right">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row user-info-container">
+                <div class="col s12" style="padding: 0">
+                    <div class="card" style="box-shadow: none;">
+                        <div class="card-image waves-effect waves-block waves-light">
+                            <div class="waves-effect waves-block waves-light" id="mypic" style="background-image:url(img/user-no-img.jpg);"></div>
+                        </div>
+                        <div class="card-content font-exit primary-color">
+                            <a class="btn-floating btn-large btn-move-up waves-effect waves-light icon-color right" href="#edit-user" data-transition="slidedown">
+                                <i class="material-icons">create</i>
+                            </a>
+                            <span class="card-title" id="client-name-panel"></span>
+                            <p id="client-city-panel"></p>
+                        </div>
+                        <div class="card-tabs font-exit primary-color">
+                            <ul class="tabs tabs-fixed-width tabs-transparent">
+                                <li class="tab"><a class="active" href="#test1">Principal</a></li>
+                                <li class="tab"><a href="#test2">Endereço</a></li>
+                                <li class="tab"><a href="#test3">Contato</a></li>
+                                <div class="indicator" style="right: 95.2344px; left: 95.7656px;"></div>
+                            </ul>
+                        </div>
+                        <div class="card-content" id="conta-div">
+
+                            <div id="test1" class="tab-content">
+                                <div class="row">
+                                    <div class="input-field col s6 width-100" id="client-name-div">
+                                        <i class="material-icons icon-color prefix">account_circle</i>
+                                        <input id="client-name-1" type="text" class="validate" readonly value="">
+                                        <label for="client-name-1">Nome</label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="input-field col m12 width-100" id="client-cpf-div">
+                                        <i class="material-icons icon-color prefix">assignment_ind</i>
+                                        <input type="text" class="validate" readonly value="" id="client-cpf">
+                                        <label for="client-cpf">CPF</label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="input-field col m12 width-100" id="client-mail-div">
+                                        <i class="material-icons icon-color prefix">email</i>
+                                        <input type="text" class="validate" readonly value="" id="client-mail">
+                                        <label for="client-mail">E-mail</label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="input-field col m12 width-100" id="client-gender-div">
+                                        <i class="fa fa-user prefix icon-color" style="font-size: 20px;"></i>
+                                        <select class="validate cliente-gender" disabled value="" id="client-gender">
+                                            <option value="0" disabled>-</option>
+                                            <option value="1">Masculino</option>
+                                            <option value="2">Feminino</option>
+                                        </select>
+                                        <label for="client-gender">Gênero</label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="input-field col m12 width-100">
+                                        <input type="hidden" value="" class="client-date">
+                                        <input type="hidden" value="" class="client-rg">
+                                        <input type="hidden" value="" class="client-country">
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div id="test2" class="tab-content">
+                                <div class="row">
+                                    <div class="input-field col m12 width-100" id="client-cep-div">
+                                        <i class="material-icons icon-color prefix">home</i>
+                                        <input type="text" class="validate" readonly value="" id="client-cep">
+                                        <label for="client-cep">CEP</label>
+                                    </div>
+
+                                    <div class="input-field col m12 width-100" id="client-ad1-div">
+                                        <i class="fa fa-home prefix icon-color" style="opacity:0;"></i>
+                                        <input type="text" class="validate" readonly value="" id="client-ad1">
+                                        <label for="client-ad1">Logradouro</label>
+                                    </div>
+
+                                    <div class="input-field col s6" id="client-nei-div">
+                                        <i class="fa fa-home prefix icon-color" style="opacity:0;"></i>
+                                        <input type="text" class="validate" readonly value="" id="client-nei">
+                                        <label for="client-nei">Bairro</label>
+                                    </div>
+
+                                    <div class="input-field col s6" id="client-ad2-div">
+                                        <i class="fa fa-home prefix icon-color" style="opacity:0;"></i>
+                                        <input type="text" class="validate" readonly value="" id="client-ad2">
+                                        <label for="client-ad2">Complemento</label>
+                                    </div>
+
+                                    <div class="input-field col s6" id="client-uf-div">
+                                        <i class="fa fa-home prefix icon-color" style="opacity:0;"></i>
+                                        <input type="text" id="client-uf" readonly>
+                                        <!-- <label for="client-uf">Estado</label> -->
+                                    </div>
+
+                                    <div class="input-field col s6" id="client-city-div">
+                                        <input type="text" class="client-city" id="client-city" disabled="">
+                                        <!-- <label for="client-city">Cidade</label> -->
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div id="test3" class="tab-content">
+                                <div class="row">
+                                    <div class="input-field col m12 width-100" id="client-tel-div">
+                                        <i class="material-icons icon-color prefix">phone</i>
+                                        <input type="text" class="validate" readonly value="" id="client-tel">
+                                        <label for="client-tel">Telefone</label>
+                                    </div>
+
+                                    <div class="input-field col m12 width-100" id="client-cel-div">
+                                        <i class="fa fa-home prefix icon-color" style="opacity:0;"></i>
+                                        <input type="text" class="validate" readonly value="" id="client-cel">
+                                        <label for="client-cel">Celular</label>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div data-role="page" id="edit-user" style="background-color: white;">
+        <div class="edit-user">
+            <a href="!#" data-rel="back" data-transition="slideup">
+                <div class="close icon-color active"></div>
+            </a>
+
+            <div class="edit-user-fields col s10" style="margin-top: 50px;">
+                <div class="row">
+                    <div class="input-field col m12 width-100" id="client-gender-div">
+                        <i class="material-icons icon-color prefix">account_circle</i>
+                        <select class="cliente-gender client-gender-edit" value="" id="client-gender-edit">
+                            <option value="0" disabled>-</option>
+                            <option value="1">Masculino</option>
+                            <option value="2">Feminino</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-bottom: 0">
+                    <div class="input-field col m12 width-100" id="client-cep-div">
+                        <i class="material-icons icon-color prefix">home</i>
+                        <input type="text" class="cep-edit client-cep" value="">
+                        <label for="client-cep">CEP</label>
+                    </div>
+
+                    <div class="input-field col m12 width-100" id="client-ad1-div">
+                        <i class="fa fa-home prefix icon-color" style="opacity:0;"></i>
+                        <input type="text" class="client-ad1 ad1-edit">
+                        <label for="client-ad1">Logradouro</label>
+                    </div>
+
+                    <div class="input-field col s12" id="client-nei-div">
+                        <i class="fa fa-home prefix icon-color" style="opacity:0;"></i>
+                        <input type="text" class="client-nei nei-edit">
+                        <label for="client-nei">Bairro</label>
+                    </div>
+
+                    <div class="input-field col s6" id="test-select">
+                        <i class="fa fa-home prefix icon-color" style="opacity:0;"></i>
+                        <select class="client-uf" id="uf-edit">
+                            <option value="0" disabled selected>-</option>
+                            <option value="12">AC</option>
+                            <option value="27">AL</option>
+                            <option value="13">AM</option>
+                            <option value="16">AP</option>
+                            <option value="29">BA</option>
+                            <option value="23">CE</option>
+                            <option value="53">DF</option>
+                            <option value="32">ES</option>
+                            <option value="52">GO</option>
+                            <option value="21">MA</option>
+                            <option value="31">MG</option>
+                            <option value="50">MS</option>
+                            <option value="51">MT</option>
+                            <option value="15">PA</option>
+                            <option value="25">PB</option>
+                            <option value="26">PE</option>
+                            <option value="22">PI</option>
+                            <option value="41">PR</option>
+                            <option value="33">RJ</option>
+                            <option value="24">RN</option>
+                            <option value="11">RO</option>
+                            <option value="14">RR</option>
+                            <option value="43">RS</option>
+                            <option value="42">SC</option>
+                            <option value="28">SE</option>
+                            <option value="35">SP</option>
+                            <option value="17">TO</option>
+                        </select>
+                        <!-- <label for="client-uf" class="active" style="margin-top: 25px;">Estado</label> -->
+                    </div>
+
+                    <div class="input-field col s6">
+                        <select class="client-city" id="city-edit">
+                            <option value="" disabled selected>Escolha</option>
+                        </select>
+                        <!-- <label for="client-city" class="active" style="margin-top: 25px;">Cidade</label> -->
+                    </div>
+
+                    <div class="input-field col s12" id="client-ad2-div">
+                        <i class="fa fa-home prefix icon-color" style="opacity:0;"></i>
+                        <input type="text" class="client-ad2 ad2-edit">
+                        <label for="client-ad2">Complemento</label>
+                    </div>
+
+                    <div class="row">
+                        <div class="input-field col m12 width-100" id="client-tel-div">
+                            <i class="material-icons icon-color prefix">phone</i>
+                            <input type="text" class="client-tel tel-edit">
+                            <label for="client-tel">Telefone</label>
+                        </div>
+
+                        <div class="input-field col m12 width-100" id="client-cel-div">
+                            <i class="fa fa-home prefix icon-color" style="opacity:0;"></i>
+                            <input type="text" class="client-cel cel-edit">
+                            <label for="client-cel">Celular</label>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <a id="update-user-info" class="btn waves-effect waves-light col s12 primary-color">Salvar</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div data-role="page" id="get-online">
+        <div class="row header-top" style="margin-bottom: -10px;">
+            <div class="navbar-fixed">
+                <nav>
+                    <div class="nav-wrapper primary-color">
+                        <a href="#!" class="brand-logo font-exit" style="font-weight: 400;font-size: 17pt;margin-top:-2px;">Lojas Online</a>
+                        <a href="#!" class="button-collapse" data-rel="back" data-transition="slide" style="font-weight: 400;color: white;font-size:17pt;">
+                            <img class="arrow-back" src="img/arrow_1.svg" width="20" height="20">
+                        </a>
+                    </div>
+                </nav>
+            </div>
+
+        </div>
+
+        <div data-role="main" class="ui-content">
+
+            <!-- Loader -->
+            <div id="muiRefresh" class="mui-refresh-main mui-refresh-nav mui-blue-theme mui-refresh-main-animat loading-div" style="z-index: 9999; top: 80px; opacity: 1; transform: scale(1);display: none;">
+                <div class="mui-refresh-wrapper">
+                    <div class="mui-arrow-wrapper" style="display: none;">
+                        <div class="mui-arrow-main" style="transform: rotate(-666deg);"></div>
+                    </div>
+                    <div class="mui-spinner-wrapper">
+                        <div class="mui-spinner-main">
+                            <div class="mui-spinner-left">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                            <div class="mui-spinner-right">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aqui vai os cards -->
+            <div id="get-online-content">
+                <div class="row" style="margin-bottom:-10px;">
+                    <div class="col s6 col m6 online-col-1">
+
+
+
+                    </div>
+                    <!-- ./col -->
+
+                    <div class="col s6 col m6 online-col-2">
+
+                    </div>
+                    <!-- ./col -->
+
+                </div>
+                <!-- ./row -->
+
+                <div class="for-example" style="display: none;">
+                    <div class="card princ-card">
+                        <div class="card-image card-img-logo waves-effect waves-block waves-light">
+                            <div class="here-is-discount"><a href="#" class="btn-floating btn-small btn-discount btn-price waves-effect waves-light pink accent-2"></a></div>
+                            <a href="#" class="external-link">
+                                <img class="activator seller-img" src="" style="width: auto;margin: 10px">
+                            </a>
+                        </div>
+
+                        <hr style="border:none;border-top: 1px solid rgba(160, 160, 160, 0.2);margin: 0;">
+
+                        <div class="card-content">
+                            <span class="card-title grey-text text-darken-4" style="line-height: 30px;"></span>
+
+                            <p><a href="#" class="external-link" rel="external" data-ajax="false">Acessar a loja</a></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- ./get-online-content -->
+
+        </div>
+
+    </div>
+
+    <div data-role="page" id="categories">
+        <div class="row header-top" style="margin-bottom: -10px;">
+            <div class="navbar-fixed">
+                <nav>
+                    <div class="nav-wrapper primary-color">
+                        <a href="#!" class="brand-logo font-exit" style="font-weight: 400;font-size: 17pt;">Categorias</a>
+                        <a href="#!" class="button-collapse" data-rel="back" data-transition="slide" style="font-weight: 400;color: white;font-size:17pt;">
+                            <img class="arrow-back" src="img/arrow_1.svg" width="20" height="20">
+                        </a>
+                    </div>
+                </nav>
+            </div>
+
+        </div>
+
+        <div data-role="main" class="ui-content" style="padding:10px 0;">
+
+            <!-- Loader -->
+            <div id="muiRefresh" class="mui-refresh-main mui-refresh-nav mui-blue-theme mui-refresh-main-animat loading-div" style="z-index: 9999; top: 80px; opacity: 1; transform: scale(1);display: none;">
+                <div class="mui-refresh-wrapper">
+                    <div class="mui-arrow-wrapper" style="display: none;">
+                        <div class="mui-arrow-main" style="transform: rotate(-666deg);"></div>
+                    </div>
+                    <div class="mui-spinner-wrapper">
+                        <div class="mui-spinner-main">
+                            <div class="mui-spinner-left">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                            <div class="mui-spinner-right">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="categories-content">
+                <div class="collection collection-mobile" id="cat-collection">
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div data-role="page" id="sub-categories">
+        <div class="row header-top" style="margin-bottom: -10px;">
+            <div class="navbar-fixed">
+                <nav>
+                    <div class="nav-wrapper primary-color">
+                        <a href="#!" class="brand-logo font-exit" style="font-weight: 400;font-size: 17pt;">Subcategorias</a>
+                        <a href="#!" class="button-collapse" data-rel="back" data-transition="slide" style="font-weight: 400;color: white;font-size:17pt;">
+                            <img class="arrow-back" src="img/arrow_1.svg" width="20" height="20">
+                        </a>
+                    </div>
+                </nav>
+            </div>
+
+        </div>
+
+        <div data-role="main" class="ui-content" style="padding:10px 0;">
+
+            <!-- Loader -->
+            <div id="muiRefresh" class="mui-refresh-main mui-refresh-nav mui-blue-theme mui-refresh-main-animat loading-div" style="z-index: 9999; top: 80px; opacity: 1; transform: scale(1);display: none;">
+                <div class="mui-refresh-wrapper">
+                    <div class="mui-arrow-wrapper" style="display: none;">
+                        <div class="mui-arrow-main" style="transform: rotate(-666deg);"></div>
+                    </div>
+                    <div class="mui-spinner-wrapper">
+                        <div class="mui-spinner-main">
+                            <div class="mui-spinner-left">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                            <div class="mui-spinner-right">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sub-categories-content">
+                <div class="collection collection-mobile">
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div data-role="page" id="premium">
+        <div class="row header-top" style="margin-bottom: -10px;">
+            <div class="navbar-fixed">
+                <nav>
+                    <div class="nav-wrapper primary-color">
+                        <a href="#!" class="brand-logo font-exit" style="font-weight: 400;font-size: 17pt;">Produtos</a>
+                        <a href="#!" class="button-collapse" data-rel="back" data-transition="slide" style="font-weight: 400;color: white;font-size:17pt;">
+                            <img class="arrow-back" src="img/arrow_1.svg" width="20" height="20">
+                        </a>
+                    </div>
+                </nav>
+            </div>
+
+        </div>
+
+        <div data-role="main" class="ui-content" style="padding:10px 0;">
+            <input type="hidden" id="deptID" value="0">
+            <input type="hidden" id="subDeptID" value="0">
+            <input type="hidden" id="pagination" value="1">
+
+            <!-- Loader -->
+            <div id="muiRefresh" class="mui-refresh-main mui-refresh-nav mui-blue-theme mui-refresh-main-animat loading-div" style="z-index: 9999; top: 80px; opacity: 1; transform: scale(1);display: none;">
+                <div class="mui-refresh-wrapper">
+                    <div class="mui-arrow-wrapper" style="display: none;">
+                        <div class="mui-arrow-main" style="transform: rotate(-666deg);"></div>
+                    </div>
+                    <div class="mui-spinner-wrapper">
+                        <div class="mui-spinner-main">
+                            <div class="mui-spinner-left">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                            <div class="mui-spinner-right">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="premium-content">
+                <ul class="collection collection-mobile" id="product-collection"></ul>
+            </div>
+
+            <div class="row">
+                <div class="col s12">
+                    <a class="waves-effect waves-light btn more-one-page light-blue" style="width: 100%;">Carregar mais</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div data-role="page" id="product">
+        <div class="row header-top" style="margin-bottom: -10px;">
+            <div class="navbar-fixed">
+                <nav>
+                    <div class="nav-wrapper primary-color">
+                        <a href="#!" class="brand-logo font-exit" style="font-weight: 400;font-size: 17pt;"></a>
+                        <a href="#!" class="button-collapse prod-back" data-rel="back" data-transition="slide" style="font-weight: 400;color: white;font-size:17pt;">
+                            <img class="arrow-back" src="img/arrow_1.svg" width="20" height="20">
+                        </a>
+                    </div>
+                </nav>
+            </div>
+
+        </div>
+
+        <div data-role="main" class="ui-content">
+
+            <!-- Loader -->
+            <div id="muiRefresh" class="mui-refresh-main mui-refresh-nav mui-blue-theme mui-refresh-main-animat loading-div" style="z-index: 9999; top: 80px; opacity: 1; transform: scale(1);display: none;">
+                <div class="mui-refresh-wrapper">
+                    <div class="mui-arrow-wrapper" style="display: none;">
+                        <div class="mui-arrow-main" style="transform: rotate(-666deg);"></div>
+                    </div>
+                    <div class="mui-spinner-wrapper">
+                        <div class="mui-spinner-main">
+                            <div class="mui-spinner-left">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                            <div class="mui-spinner-right">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="product-content">
+                <div class="row">
+                    <div class="col s12 m12 no-padding">
+                        <div class="col s12 col m5 no-padding carousel-display" style="margin: 0.5rem 0 0 0;">
+                            <div id="owl-demo" class="owl-carousel"></div>
+                        </div>
+
+                        <div class="col s12 col m7 no-padding">
+                            <div class="product-card">
+                                <div class="card">
+
+                                    <div class="card-content">
+                                        <small class="card-branch">Válido para: <span></span></small>
+                                        <h2 class="card-title grey-text text-darken-3"></h2>
+
+                                        <hr style="border:none;border-top: 1px solid rgba(160, 160, 160, 0.2);">
+
+                                        <h1 class="grey-text text-darken-2 card-price"></h1>
+
+                                        <a class="waves-effect waves-light btn green" style="width: 100%;">Gerar Voucher</a>
+
+                                        <hr style="border:none;border-top: 1px solid rgba(160, 160, 160, 0.2);">
+
+                                        <h4 class="grey-text text-darken-2">Descrição do produto</h4>
+                                        <p class="grey-text card-desc"></p>
+
+                                        <hr style="border:none;border-top: 1px solid rgba(160, 160, 160, 0.2);">
+
+                                        <p class="card-small-desc"></p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- ./col -->
+                </div>
+                <!-- ./row -->
+            </div>
+
+
+        </div>
+    </div>
+
+    <div data-role="page" id="top-sale">
+        <div class="row header-top" style="margin-bottom: -10px;">
+            <div class="navbar-fixed">
+                <nav>
+                    <div class="nav-wrapper primary-color">
+                        <a href="#!" class="brand-logo font-exit" style="font-weight: 400;font-size: 17pt;margin-top:-2px;">Top Ofertas</a>
+                        <a href="#!" class="button-collapse" data-rel="back" data-transition="slide" style="font-weight: 400;color: white;font-size:17pt;">
+                            <img class="arrow-back" src="img/arrow_1.svg" width="20" height="20">
+                        </a>
+                    </div>
+                </nav>
+            </div>
+
+        </div>
+
+        <div data-role="main" class="ui-content">
+
+            <!-- Loader -->
+            <div id="muiRefresh" class="mui-refresh-main mui-refresh-nav mui-blue-theme mui-refresh-main-animat loading-div" style="z-index: 9999; top: 80px; opacity: 1; transform: scale(1);display: none;">
+                <div class="mui-refresh-wrapper">
+                    <div class="mui-arrow-wrapper" style="display: none;">
+                        <div class="mui-arrow-main" style="transform: rotate(-666deg);"></div>
+                    </div>
+                    <div class="mui-spinner-wrapper">
+                        <div class="mui-spinner-main">
+                            <div class="mui-spinner-left">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                            <div class="mui-spinner-right">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="premium-content">
+                <ul class="collection" id="product-collection"></ul>
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <div data-role="page" id="voucher">
+        <div class="row header-top" style="margin-bottom: -10px;">
+            <div class="navbar-fixed">
+                <nav>
+                    <div class="nav-wrapper primary-color">
+                        <a href="#!" class="brand-logo font-exit" style="font-weight: 400;font-size: 17pt;">Seu Cupom</a>
+                        <a href="#!" class="button-collapse voucher-back" data-rel="back" data-transition="slideup" style="font-weight: 400;color: white;font-size:17pt;">
+                            <img class="arrow-back" src="img/arrow_1.svg" width="20" height="20">
+                        </a>
+                    </div>
+                </nav>
+            </div>
+
+        </div>
+
+        <div data-role="main" class="ui-content">
+
+            <!-- Loader -->
+            <div id="muiRefresh" class="mui-refresh-main mui-refresh-nav mui-blue-theme mui-refresh-main-animat loading-div" style="z-index: 9999; top: 80px; opacity: 1; transform: scale(1);display: none;">
+                <div class="mui-refresh-wrapper">
+                    <div class="mui-arrow-wrapper" style="display: none;">
+                        <div class="mui-arrow-main" style="transform: rotate(-666deg);"></div>
+                    </div>
+                    <div class="mui-spinner-wrapper">
+                        <div class="mui-spinner-main">
+                            <div class="mui-spinner-left">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                            <div class="mui-spinner-right">
+                                <div class="mui-half-circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="voucher-container">
+                <div class="discount">
+                    <!-- <h2 class="primary-color-text"></h2>
+                    <span>de desconto</span> -->
+                </div>
+
+                <img src="">
+
+                <br>
+
+                <h4 class="grey-text text-darken-2"></h4>
+
+                <p class="third-color-text">Código do Cupom:</p>
+
+                <div class="voucher-code second-color-text">
+                    <span id="voucher-code-copy"></span>
+                </div>
+            </div>
+
+            <div class="fixed-action-btn">
+                <a class="btn-floating btn-large second-color" onclick="copyToClipboardMsg(document.getElementById('voucher-code-copy'));">
+                    <i class="material-icons">content_copy</i>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="text/javascript" src="plugins/jquery-2.1.1.js"></script>
+    <script type="text/javascript" src="plugins/jquery-mobile/jquery.mobile-1.4.5.js"></script>
+    <script type="text/javascript" src="materialize/js/materialize-2.js"></script>
+    <script type="text/javascript" src="js/owl.carousel.min.js"></script>
+    <script type="text/javascript" src="plugins/input-mask/jquery.mask.js"></script>
+    <script type="text/javascript" src="js/functions.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/iscroll.js"></script>
+    <!--google map-->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCrT0ikZPDm165kKYU4jG36hrLwmej4p4"></script>
+
+
+</body>
+</html>

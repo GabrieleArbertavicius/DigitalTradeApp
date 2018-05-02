@@ -1,0 +1,47 @@
+.primary-color {
+	background-color: #314395 !important;
+}
+
+.primary-color-text {
+	color: #314395 !important;
+}
+
+.second-color {
+	background-color: #60B12E !important;
+}
+
+.second-color-text {
+	color: #60B12E !important;
+}
+
+.third-color {
+	background-color: #ffab40 !important;
+}
+
+.third-color-text {
+	color: #ffab40 !important;
+}
+
+.icon-color {
+	color: #60B12E !important;
+}
+
+a.icon-color {
+	background: #60B12E !important;
+}
+
+.font-exit {
+	color: white !important;
+}
+
+table th {
+	background-color: #43ac6c !important;
+	border-radius: 0 !important;
+	color: white !important;
+}
+
+tr:nth-child(even) {background-color: #f5f5f5}
+
+.btn-login-color {
+	background-color: #60B12E !important;
+}
